@@ -1,0 +1,46 @@
+<div class="upload-container">
+    <!-- Sezione di benvenuto -->
+    <div class="welcome-section">
+        <h1>Benvenuto nel generatore di missioni per droni con PX4</h1>
+        <div class="kml-creation-link">
+            <p>
+                <a href="https://geojson.io/" target="_blank" class="external-link">
+                    <span class="link-icon">🗺️</span>
+                    Clicca qui per creare il tuo file KML
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Sezione di upload -->
+    <div class="upload-section">
+        <h2>Carica file KML per generare waypoint</h2>
+
+        <div class="file-input-container">
+            <input type="file" (change)="onFileSelected($event)" accept=".kml" #fileInput>
+            <button (click)="fileInput.click()">Seleziona file KML</button>
+            <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+        </div>
+
+        <div class="output-type-container">
+            <label>Tipo output:</label>
+            <select [(ngModel)]="outputType">
+                <option value="python">Script Python</option>
+                <option value="plan">File .plan (QGroundControl)</option>
+            </select>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+            <strong>Errore:</strong> {{ errorMessage }}
+        </div>
+
+        <button class="generate-button" (click)="onProcessFile()" [disabled]="!selectedFile || isLoading">
+            {{ isLoading ? 'Elaborazione in corso...' : 'Genera waypoint' }}
+        </button>
+
+        <div *ngIf="isLoading" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Elaborazione del file in corso....</p>
+        </div>
+    </div>
+</div>
