@@ -10,12 +10,17 @@ const port = process.env.PORT || 3000;
 
 // Middleware CORS
 app.use(cors({
-    origin: 'http://localhost:4200',
+    origin: process.env.NODE_ENV === 'production' 
+        ? false
+        : 'http://localhost:4200',
     credentials: true
 }));
 
 // Middleware per parsing JSON
 app.use(express.json());
+
+// SERVERE FILE STATICI ANGULAR
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Gestione errori globale
 app.use((error, req, res, next) => {
@@ -42,21 +47,18 @@ process.on('unhandledRejection', (reason) => {
 const upload = multer({ dest: 'uploads/' });
 
 // Route principale
-app.get('/', (res) => {
-    console.log('Richiesta ricevuta sulla root');
-    res.json({
-        message: 'Backend KML Processor is running!',
-        timeStamp: new Date().toISOString()
-    });
+app.get('/', (req, res) => {
+    console.log('Richiesta ricevuta sulla root - servendo Angular');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Endpoint POST per processare KML
 app.post('/api/process-kml', upload.single('kmlFile'), processKML);
 
-// Gestione errori 404 (catch-all)
-app.use((req, res) => {
-    console.log('Route non trovata:', req.originalUrl);
-    res.status(404).json({ error: 'Route non trovata' });
+
+app.get('*', (req, res) => {
+    console.log('Catch-all route per Angular:', req.originalUrl);
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Gestione errori globali
@@ -83,6 +85,8 @@ function cleanupUploads() {
 // Avvio server
 app.listen(port, () => {
     console.log(`Server in ascolto sulla porta ${port}`);
+    console.log(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Frontend Angular servito dalla cartella: ${path.join(__dirname, 'public')}`);
     cleanupUploads();
 });
 
