@@ -211,7 +211,7 @@ function generateHexGridWithBufferAndFilter(polygonCoords, r, threshold = 0.1) {
 
         // Safety check - interrompi se stiamo generando troppi punti
             if (totalPoints >= 150) {
-                console.warn('Interruzione anticipata: troppi punti generati (>=125)');
+                console.warn('Interruzione anticipata: troppi punti generati (>=150)');
                 break;
             }
     }
