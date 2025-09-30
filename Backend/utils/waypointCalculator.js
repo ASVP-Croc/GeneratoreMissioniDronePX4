@@ -122,8 +122,8 @@ function generateHexGridWithBufferAndFilter(polygonCoords, r, threshold = 0.1) {
     const removedPoints = [];
     
     // Calcoli in metri (sistema UTM)
-    const dx = 1.5 * r;
-    const dy = Math.sqrt(3) * r;
+    const dx = Math.sqrt(3) * r;
+    const dy = 1.5 * r;
     
     let y = minUTM[1] - r;
     let row = 0;
@@ -132,7 +132,7 @@ function generateHexGridWithBufferAndFilter(polygonCoords, r, threshold = 0.1) {
     console.log('Inizio generazione griglia in UTM...');
     
     while (y <= maxUTM[1] + r) {
-        const xOffset = (row % 2) ? 0.75 * r : 0;
+        const xOffset = (row % 2 === 1) ? dx / 2 : 0;
         let x = minUTM[0] - r + xOffset;
         const currentRow = [];
         
