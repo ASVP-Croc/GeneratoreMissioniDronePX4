@@ -180,16 +180,11 @@ def takeoff(services: CloverServices, altitude, speed):
         services.navigate(x=0, y=0, z=altitude, yaw=float('nan'), speed=speed, frame_id='body', auto_arm=True)
 
         # Attendi che l'altitudine sia raggiunta
-        if use_global_mode:
-            if not wait_for_position_global(services, telem.x, telem.y, speed, HOVER_TIME):
-                rospy.logwarn("Failed to reach takeoff altitude.")
-            else:
-                rospy.loginfo("[TAKEOFF] Takeoff completed successfully")
+        
+        if not wait_for_position_map(services, telem.x, telem.y, speed, HOVER_TIME):
+             rospy.logwarn("Failed to reach takeoff altitude.")
         else:
-            if not wait_for_position_map(services, telem.x, telem.y, speed, HOVER_TIME):
-                rospy.logwarn("Failed to reach takeoff altitude.")
-            else:
-                rospy.loginfo("[TAKEOFF] Takeoff completed successfully")
+             rospy.loginfo("[TAKEOFF] Takeoff completed successfully")
 
     except Exception as e:
         rospy.logerr(f"Error during takeoff: {e}")
