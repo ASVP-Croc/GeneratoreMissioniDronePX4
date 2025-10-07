@@ -152,7 +152,7 @@ function generateHexGridWithBufferAndFilter(polygonCoords, r, threshold = 0.1) {
                     // Crea il buffer con opzioni più conservative
                     const circle = turfBuffer(point, r, { 
                         units: 'meters',
-                        steps: 8
+                        steps: 32
                     });
                     
                     if (!circle || !circle.geometry || !polygon || !polygon.geometry) {
@@ -210,8 +210,8 @@ function generateHexGridWithBufferAndFilter(polygonCoords, r, threshold = 0.1) {
         row += 1;
 
         // Safety check - interrompi se stiamo generando troppi punti
-            if (totalPoints >= 150) {
-                console.warn('Interruzione anticipata: troppi punti generati (>=150)');
+            if (totalPoints > 500) {
+                console.warn('Interruzione anticipata: troppi punti generati (> 500)');
                 break;
             }
     }
